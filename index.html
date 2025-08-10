@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ExcelenceAI - Advanced Code Formatter & Language Detective</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="ExcelenceAI - Professional code formatter, minifier, and language detector. Support for C-family languages and web stack. 100% offline, GitHub Pages ready.">
+    <meta name="keywords" content="code formatter, minifier, language detector, C, C++, C#, JavaScript, HTML, CSS, PHP, SQL, developer tools">
+    <meta name="author" content="ExcelenceAI">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="ExcelenceAI - Advanced Code Formatter">
+    <meta property="og:description" content="Professional code formatter and language detector for developers">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="assets/logo.png">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="ExcelenceAI - Advanced Code Formatter">
+    <meta name="twitter:description" content="Professional code formatter and language detector">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+    <link rel="apple-touch-icon" href="assets/favicon.ico">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="./css/styles.css">
+    
+    <!-- Preload -->
+    <link rel="preload" href="./js/main.js" as="script">
+    <link rel="preload" href="./js/api.js" as="script">
+    
+    <!-- JSON-LD Schema -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "ExcelenceAI",
+        "applicationCategory": "Developer Tool",
+        "description": "Advanced code formatter and language detector",
+        "operatingSystem": "Any",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        }
+    }
+    </script>
+</head>
+<body data-theme="light">
+    <!-- Navigation -->
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+        <div class="nav-content">
+            <div class="nav-brand">
+                <i class="fas fa-code nav-logo"></i>
+                <span class="nav-title">ExcelenceAI</span>
+            </div>
+            
+            <div class="nav-controls">
+                <button id="themeToggle" class="nav-btn" title="Toggle Theme" aria-label="Toggle Theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button id="settingsBtn" class="nav-btn" title="Settings" aria-label="Settings">
+                    <i class="fas fa-cog"></i>
+                </button>
+                <button id="helpBtn" class="nav-btn" title="Help & About" aria-label="Help">
+                    <i class="fas fa-question-circle"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content" role="main">
+        <!-- Toolbar -->
+        <div class="toolbar" role="toolbar" aria-label="Code formatting tools">
+            <div class="toolbar-section">
+                <button id="uploadBtn" class="toolbar-btn primary" title="Upload File (Ctrl+O)" aria-label="Upload File">
+                    <i class="fas fa-upload"></i>
+                    <span>Upload</span>
+                </button>
+                <input type="file" id="fileInput" accept=".c,.cpp,.cs,.m,.html,.css,.js,.json,.php,.sql" hidden>
+                
+                <button id="downloadBtn" class="toolbar-btn" title="Download (Ctrl+S)" aria-label="Download File">
+                    <i class="fas fa-download"></i>
+                    <span>Download</span>
+                </button>
+                
+                <button id="copyBtn" class="toolbar-btn" title="Copy to Clipboard (Ctrl+C)" aria-label="Copy to Clipboard">
+                    <i class="fas fa-copy"></i>
+                    <span>Copy</span>
+                </button>
+            </div>
+            
+            <div class="toolbar-section">
+                <button id="formatBtn" class="toolbar-btn accent" title="Format Code (Ctrl+Shift+F)" aria-label="Format Code">
+                    <i class="fas fa-magic"></i>
+                    <span>Format</span>
+                </button>
+                
+                <button id="minifyBtn" class="toolbar-btn warning" title="Minify Code (Ctrl+M)" aria-label="Minify Code">
+                    <i class="fas fa-compress-alt"></i>
+                    <span>Minify</span>
+                </button>
+                
+                <button id="cleanBtn" class="toolbar-btn success" title="Clean Code (Ctrl+L)" aria-label="Clean Code">
+                    <i class="fas fa-broom"></i>
+                    <span>Clean</span>
+                </button>
+                
+                <button id="deminifyBtn" class="toolbar-btn info" title="Deminify (Ctrl+D)" aria-label="Deminify Code">
+                    <i class="fas fa-expand-alt"></i>
+                    <span>Deminify</span>
+                </button>
+            </div>
+            
+            <div class="toolbar-section">
+                <button id="commandPaletteBtn" class="toolbar-btn" title="Command Palette (Ctrl+Shift+P)" aria-label="Command Palette">
+                    <i class="fas fa-terminal"></i>
+                    <span>Commands</span>
+                </button>
+                
+                <button id="diffToggle" class="toolbar-btn" title="Toggle Diff Mode" aria-label="Toggle Diff Mode">
+                    <i class="fas fa-columns"></i>
+                    <span>Diff</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Editor Container -->
+        <div class="editor-container">
+            <!-- Input Panel -->
+            <section class="editor-panel" aria-label="Input code editor">
+                <div class="panel-header">
+                    <div class="panel-title">
+                        <i class="fas fa-edit"></i>
+                        <span>Input</span>
+                    </div>
+                    <div class="panel-controls">
+                        <button id="lineNumbersToggle" class="panel-btn" title="Toggle Line Numbers" aria-label="Toggle Line Numbers">
+                            <i class="fas fa-list-ol"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="editor-wrapper">
+                    <div class="drop-zone" id="dropZone">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Drop files here or click to upload</p>
+                    </div>
+                    <textarea id="inputEditor" class="code-editor" placeholder="Paste your code here or upload a file..." spellcheck="false" aria-label="Input code editor"></textarea>
+                </div>
+            </section>
+
+            <!-- Resize Handle -->
+            <div class="resize-handle" id="resizeHandle" role="separator" aria-orientation="vertical" aria-label="Resize panels"></div>
+
+            <!-- Output Panel -->
+            <section class="editor-panel" aria-label="Output code editor">
+                <div class="panel-header">
+                    <div class="panel-title">
+                        <i class="fas fa-code"></i>
+                        <span>Output</span>
+                    </div>
+                    <div class="panel-controls">
+                        <button id="syntaxHighlightToggle" class="panel-btn active" title="Toggle Syntax Highlighting" aria-label="Toggle Syntax Highlighting">
+                            <i class="fas fa-palette"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="editor-wrapper">
+                    <textarea id="outputEditor" class="code-editor" readonly placeholder="Formatted code will appear here..." spellcheck="false" aria-label="Output code editor"></textarea>
+                    <div id="outputHighlight" class="code-highlight" aria-hidden="true"></div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Status Bar -->
+        <div class="status-bar" role="status" aria-live="polite">
+            <div class="status-section">
+                <span id="languageStatus" class="status-item">
+                    <i class="fas fa-language"></i>
+                    <span>No language detected</span>
+                </span>
+                
+                <span id="fileStatus" class="status-item">
+                    <i class="fas fa-file"></i>
+                    <span>No file</span>
+                </span>
+            </div>
+            
+            <div class="status-section">
+                <span id="timeStatus" class="status-item">
+                    <i class="fas fa-clock"></i>
+                    <span>0ms</span>
+                </span>
+                
+                <span id="savingsStatus" class="status-item">
+                    <i class="fas fa-chart-line"></i>
+                    <span>0% saved</span>
+                </span>
+            </div>
+        </div>
+    </main>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal" role="dialog" aria-labelledby="settingsTitle" aria-hidden="true">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="settingsTitle">Settings</h2>
+                <button class="modal-close" aria-label="Close settings">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="tabs" role="tablist">
+                    <button class="tab active" role="tab" data-tab="appearance" aria-selected="true">
+                        <i class="fas fa-palette"></i>
+                        Appearance
+                    </button>
+                    <button class="tab" role="tab" data-tab="editor" aria-selected="false">
+                        <i class="fas fa-code"></i>
+                        Editor
+                    </button>
+                    <button class="tab" role="tab" data-tab="formatting" aria-selected="false">
+                        <i class="fas fa-magic"></i>
+                        Formatting
+                    </button>
+                </div>
+                
+                <div class="tab-content">
+                    <div id="appearance" class="tab-panel active" role="tabpanel">
+                        <div class="setting-group">
+                            <label for="themeSelect">Theme</label>
+                            <select id="themeSelect" class="setting-input">
+                                <option value="light">Light</option>
+                                <option value="dark">Dark</option>
+                                <option value="high-contrast">High Contrast</option>
+                                <option value="solarized">Solarized</option>
+                                <option value="dracula">Dracula</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div id="editor" class="tab-panel" role="tabpanel">
+                        <div class="setting-group">
+                            <label for="fontSizeRange">Font Size</label>
+                            <input type="range" id="fontSizeRange" class="setting-range" min="10" max="24" value="14">
+                            <span id="fontSizeValue">14px</span>
+                        </div>
+                        
+                        <div class="setting-group">
+                            <label for="tabWidthRange">Tab Width</label>
+                            <input type="range" id="tabWidthRange" class="setting-range" min="2" max="8" value="4">
+                            <span id="tabWidthValue">4</span>
+                        </div>
+                        
+                        <div class="setting-group">
+                            <label for="lineNumbersCheck" class="checkbox-label">
+                                <input type="checkbox" id="lineNumbersCheck" checked>
+                                Show Line Numbers
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div id="formatting" class="tab-panel" role="tabpanel">
+                        <div class="setting-group">
+                            <label for="braceStyleSelect">Brace Style</label>
+                            <select id="braceStyleSelect" class="setting-input">
+                                <option value="allman">Allman</option>
+                                <option value="k&r">K&R</option>
+                                <option value="gnu">GNU</option>
+                                <option value="whitesmiths">Whitesmiths</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Help Modal -->
+    <div id="helpModal" class="modal" role="dialog" aria-labelledby="helpTitle" aria-hidden="true">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="helpTitle">Help & About</h2>
+                <button class="modal-close" aria-label="Close help">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="tabs" role="tablist">
+                    <button class="tab active" role="tab" data-tab="about" aria-selected="true">
+                        <i class="fas fa-info-circle"></i>
+                        About
+                    </button>
+                    <button class="tab" role="tab" data-tab="shortcuts" aria-selected="false">
+                        <i class="fas fa-keyboard"></i>
+                        Shortcuts
+                    </button>
+                    <button class="tab" role="tab" data-tab="languages" aria-selected="false">
+                        <i class="fas fa-language"></i>
+                        Languages
+                    </button>
+                </div>
+                
+                <div class="tab-content">
+                    <div id="about" class="tab-panel active" role="tabpanel">
+                        <div class="about-section">
+                            <h3>ExcelenceAI [Minius-Software-Labs]</h3>
+                            <p>Advanced code formatter and language detector for professional developers.</p>
+                            <p><strong>Version:</strong> 1.0.0</p>
+                            <p><strong>Developer:</strong> Aman Franks -Lkixome@gmail.com</p>
+                            <p><strong>Company:</strong> Minius-Software-Labs</p>
+                            <p><strong>Features:</strong></p>
+                            <ul>
+                                <li>100% accurate C-family language detection</li>
+                                <li>Code formatting, minification, and cleaning</li>
+                                <li>Syntax highlighting for all supported languages</li>
+                                <li>Offline functionality</li>
+                                <li>Multiple themes and customization options</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div id="shortcuts" class="tab-panel" role="tabpanel">
+                        <div class="shortcuts-list">
+                            <div class="shortcut-item">
+                                <kbd>Ctrl</kbd> + <kbd>O</kbd>
+                                <span>Upload File</span>
+                            </div>
+                            <div class="shortcut-item">
+                                <kbd>Ctrl</kbd> + <kbd>S</kbd>
+                                <span>Download File</span>
+                            </div>
+                            <div class="shortcut-item">
+                                <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>F</kbd>
+                                <span>Format Code</span>
+                            </div>
+                            <div class="shortcut-item">
+                                <kbd>Ctrl</kbd> + <kbd>M</kbd>
+                                <span>Minify Code</span>
+                            </div>
+                            <div class="shortcut-item">
+                                <kbd>Ctrl</kbd> + <kbd>L</kbd>
+                                <span>Clean Code</span>
+                            </div>
+                            <div class="shortcut-item">
+                                <kbd>Ctrl</kbd> + <kbd>D</kbd>
+                                <span>Deminify Code</span>
+                            </div>
+                            <div class="shortcut-item">
+                                <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd>
+                                <span>Command Palette</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="languages" class="tab-panel" role="tabpanel">
+                        <div class="languages-grid">
+                            <div class="language-group">
+                                <h4>C-Family</h4>
+                                <ul>
+                                    <li>C (.c, .h)</li>
+                                    <li>C++ (.cpp, .cxx, .hpp)</li>
+                                    <li>C# (.cs)</li>
+                                    <li>Objective-C (.m, .mm)</li>
+                                </ul>
+                            </div>
+                            <div class="language-group">
+                                <h4>Web Stack</h4>
+                                <ul>
+                                    <li>HTML (.html, .htm)</li>
+                                    <li>CSS (.css)</li>
+                                    <li>JavaScript (.js)</li>
+                                    <li>JSON (.json)</li>
+                                    <li>PHP (.php)</li>
+                                    <li>SQL (.sql)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Command Palette -->
+    <div id="commandPalette" class="command-palette" role="dialog" aria-labelledby="commandTitle" aria-hidden="true">
+        <div class="command-content">
+            <div class="command-header">
+                <h3 id="commandTitle">Command Palette</h3>
+                <button class="command-close" aria-label="Close command palette">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <input type="text" id="commandInput" class="command-input" placeholder="Type a command..." autocomplete="off" aria-label="Command input">
+            
+            <div id="commandList" class="command-list" role="listbox"></div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay" aria-hidden="true">
+        <div class="loading-spinner">
+            <i class="fas fa-code fa-spin"></i>
+            <p>Processing...</p>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="./js/langMap.js"></script>
+    <script src="./js/utils.js"></script>
+    <script src="./js/minifier.js"></script>
+    <script src="./js/formatter.js"></script>
+    <script src="./js/highlighter.js"></script>
+    <script src="./js/api.js"></script>
+    <script src="./js/main.js"></script>
+</body>
+</html>
